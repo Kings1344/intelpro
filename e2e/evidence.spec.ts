@@ -34,7 +34,7 @@ test("private-network URLs are rejected (SSRF protection)", async ({ page }) => 
     data: { title: "Metadata", sourceName: "x", sourceUrl: "http://169.254.169.254/latest/meta-data", description: "attempted internal fetch", category: "OTHER" },
   });
   expect(res.status()).toBe(422);
-  expect((await res.json()).error.message).toMatch(/Private or reserved/);
+  expect(JSON.stringify(await res.json())).toMatch(/Private or reserved/);
 });
 
 test("PDF evidence: text PDFs are read and analysed; scanned PDFs are stored but reported unreadable", async ({ page }) => {

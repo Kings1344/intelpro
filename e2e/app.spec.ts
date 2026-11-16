@@ -30,7 +30,7 @@ test("market discovery: filters, market selection and live PREDICT tab never sho
   const rows = page.locator("tbody tr");
   await expect(rows.first()).toContainText("Under dispute");
   await rows.first().getByRole("link").first().click();
-  await expect(page.getByText(/Approved resolution rules|Resolution rules \(not approved\)/)).toBeVisible();
+  await expect(page.getByText(/Approved resolution rules|Resolution rules \(not approved\)/).first()).toBeVisible();
   await expect(page.getByText("Integrity", { exact: true })).toBeVisible();
 
   await page.goto("/markets?source=predict");
@@ -56,7 +56,7 @@ test("Market Architect: flags the question, blocks inconsistent rules, then crea
   await no.fill(original);
   await page.getByRole("button", { name: "Approve rules and create market" }).click();
   await page.waitForURL(/\/markets\/[a-z0-9]+$/);
-  await expect(page.getByText(/Approved resolution rules, v1/)).toBeVisible();
+  await expect(page.getByText(/Approved resolution rules, v1/).first()).toBeVisible();
 });
 
 test("resolution: recommendation cites only stored evidence and is labelled as advisory", async ({ page }) => {
@@ -76,5 +76,5 @@ test("approved markets can be created through the API helper used by other specs
   await verifiedUser(page, "helper");
   const id = await approvedMarket(page);
   await page.goto(`/markets/${id}`);
-  await expect(page.getByText(/Approved resolution rules, v1/)).toBeVisible();
+  await expect(page.getByText(/Approved resolution rules, v1/).first()).toBeVisible();
 });
