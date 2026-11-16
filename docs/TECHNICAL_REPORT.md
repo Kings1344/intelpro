@@ -4,15 +4,15 @@ Status as of 16 November 2026 (second completion pass).
 
 ## Read this first: what was and wasn't possible here
 
-The environment used to build IntelPro **cannot reach the npm registry or Solana devnet**. It *can* reach GitHub over git, which made it possible to read the official pm-AMM program, SDK and app source.
+The sandbox used to write IntelPro cannot reach the npm registry or Solana devnet, so the code was first verified there with stubs and local Postgres. It has since been pushed to GitHub and run on GitHub Actions (run 43919720186, commit 4760057).
 
-So these steps **have not been run yet**:
-- `npm install`
-- `npm run typecheck` with real type packages
-- `npm run lint`
-- `next build`
-- the Playwright suite against the real app
-- any devnet transaction
+**Real CI results (GitHub Actions, Postgres 16 service):** install, migrate, migration drift check, seed, `tsc` strict, ESLint, 62 unit/integration tests, DB constraint tests, `next build` and the Playwright E2E suite (18 tests, desktop and mobile Chromium) all pass.
+
+**What the first real run found and fixed:** two TypeScript errors (a spread that silently overwrote market status with integrity status in `/api/integrity`; an unsafe SDK cast); the pm-AMM SDK failing under Node's native ESM loader (`Named export 'BN' not found` from `@anchor-lang/core`, which broke PREDICT discovery at runtime) — fixed by bundling the SDK; and several E2E assertions (duplicate-text locators; an SSRF test that passed for the wrong reason because its payload failed validation first).
+
+**Still not run:**
+- Devnet trading (launch, buy, sell). The dispatch run (43920855615) reached the trading spec and failed before any transaction: the public devnet RPC answered `requestAirdrop: The RPC faucet is closed on this cluster`, so the throwaway test wallet could not be funded with SOL. No on-chain result is claimed. Fix: fund a devnet keypair at https://faucet.solana.com and supply it to the workflow as a secret (needs a small change to the spec to fund from it).
+- Docker image build, Resend delivery.
 
 Everything needed to run them is written and committed: dependencies, ESLint config, Playwright config and specs, a GitHub Actions workflow and a Dockerfile.
 
@@ -43,10 +43,10 @@ Nothing in this report is claimed as working unless the "Verified here" column s
 | `scripts/test-db.sh` on PostgreSQL 16 | **Pass.** Both migrations apply; 12 constraint checks pass, including token-hash uniqueness, the URL-or-PDF CHECK, one file per evidence row, new users starting unverified, and cascades for tokens and files. |
 | Strict `tsc` with stubbed external types | Only stub artifacts remain (inference through the `any` Prisma client, plus one missing stub export). Found and fixed real bugs: a deleted `makeClient` helper (would have broken every trade and vault call), and an unsupported pdfjs option. |
 | Visual QA in Chromium (preview harness with real components and real Tailwind build) | Overview, Market Architect, evidence, PDF upload, buy and sell panels, mobile layouts render correctly. Found and fixed: stale buy quote shown on the sell tab and executable. |
-| ESLint | **Not run** (package unavailable here) |
-| Playwright E2E | **Not run** |
-| `next build` | **Not run** |
-| Devnet trading | **Not run** |
+| ESLint | **Pass in CI** |
+| Playwright E2E | **Pass in CI** (18 tests) |
+| `next build` | **Pass in CI** |
+| Devnet trading | **Not run**: devnet airdrop faucet closed (see top) |
 
 **Tests that failed:** none of the suites that could run are failing. During this pass, two sell-quote tests failed and exposed that the official app's fallback sell estimate is wrong; IntelPro now ports the program's formula. One visual check exposed the stale-quote bug. Both are fixed.
 
@@ -79,7 +79,6 @@ Nothing in this report is claimed as working unless the "Verified here" column s
 
 ## Manual actions still required from you
 
-1. **Connect GitHub** (claude.ai Settings → Connectors) and ask for a push, or push the zip yourself. That gives a real install, lockfile, build, lint, E2E and devnet run.
-2. Commit the `package-lock.json` produced by the first `npm install`.
+1. Fund a devnet wallet for the trading test (faucet above) and provide its key as a workflow secret.
+2. Commit a `package-lock.json` (CI currently runs `npm install`; one registry glitch already forced a re-run).
 3. Provide production credentials: database, `SESSION_SECRET`, Resend key and sender, RPC, and optionally Anthropic.
-4. Fix anything the first real build or E2E run surfaces. The most likely areas are third-party type definitions (Prisma payloads, the SDK's own `.d.ts`) and selector details in E2E specs written against unrun UI.
