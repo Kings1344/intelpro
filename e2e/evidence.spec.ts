@@ -31,9 +31,9 @@ test("private-network URLs are rejected (SSRF protection)", async ({ page }) => 
   await verifiedUser(page, "ssrf");
   const id = await approvedMarket(page);
   const res = await page.request.post(`/api/markets/${id}/evidence`, {
-    data: { title: "Metadata", sourceName: "x", sourceUrl: "http://169.254.169.254/latest/meta-data", description: "attempted internal fetch", category: "OTHER" },
+    data: { title: "Metadata", sourceName: "Metadata service", sourceUrl: "http://169.254.169.254/latest/meta-data", description: "attempted internal fetch", category: "OTHER" },
   });
-  expect(res.status()).toBe(422);
+  expect(res.status()).toBe(400);
   expect(JSON.stringify(await res.json())).toMatch(/Private or reserved/);
 });
 
