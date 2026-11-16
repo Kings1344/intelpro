@@ -4,5 +4,5 @@ import { listMarkets } from "@/lib/services/markets";
 
 export const GET = route({}, async ({ req }) => {
   const rows = await listMarkets(parseQuery(req, marketListQuery));
-  return rows.map((m) => ({ id: m.id, question: m.question, category: m.category, status: m.status, isDemo: m.isDemo, resolutionDeadline: m.resolutionDeadline, ...m.integrity }));
+  return rows.map((m) => ({ id: m.id, question: m.question, category: m.category, marketStatus: m.status, isDemo: m.isDemo, resolutionDeadline: m.resolutionDeadline, status: m.integrity.status, findings: m.integrity.findings }));
 });

@@ -35,7 +35,7 @@ export async function discoverPredictMarkets(opts: { force?: boolean } = {}): Pr
   if (!opts.force && cache && Date.now() - cache.at < TTL) return { markets: cache.markets, status: cache.status };
   try {
     const { client, math } = await readOnlyClient();
-    const raw = (await client.fetchAllMarkets(publicConfig.predict.marketAccountSize)) as { publicKey: { toBase58(): string }; account: Record<string, unknown> }[];
+    const raw = (await client.fetchAllMarkets(publicConfig.predict.marketAccountSize)) as unknown as { publicKey: { toBase58(): string }; account: Record<string, unknown> }[];
     const now = new Date();
     const markets = raw
       .map((r) => normalizeMarket(r.publicKey.toBase58(), r.account, math, now))
