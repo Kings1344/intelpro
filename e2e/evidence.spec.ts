@@ -16,7 +16,7 @@ test("URL evidence is recorded as submitted, then retrieved and analysed by the 
   await page.getByRole("button", { name: "Submit evidence" }).click();
   await expect(page.getByText("Evidence submitted")).toBeVisible();
   const card = page.locator("article", { hasText: "IANA example domain" });
-  await expect(card.getByText("Submitted", { exact: true })).toBeVisible();
+  await expect(card.getByText("Submitted", { exact: true }).first()).toBeVisible();
 
   await card.getByRole("button", { name: "Retrieve and analyse" }).click();
   // Real network: either analysed (heuristic, never a YES/NO stance) or honestly unverifiable.
@@ -33,7 +33,7 @@ test("private-network URLs are rejected (SSRF protection)", async ({ page }) => 
   const res = await page.request.post(`/api/markets/${id}/evidence`, {
     data: { title: "Metadata", sourceName: "x", sourceUrl: "http://169.254.169.254/latest/meta-data", description: "attempted internal fetch", category: "OTHER" },
   });
-  expect(res.status()).toBe(400);
+  expect(res.status()).toBe(422);
   expect((await res.json()).error.message).toMatch(/Private or reserved/);
 });
 

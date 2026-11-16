@@ -14,8 +14,11 @@ const nextConfig = {
   // Self-contained server bundle for Docker / any Node host (see Dockerfile).
   output: "standalone",
   poweredByHeader: false,
-  // The pm-AMM SDK and Anchor are CommonJS-heavy; let the server require them natively.
-  serverExternalPackages: ["@pm-amm/sdk", "@anchor-lang/core", "pdfjs-dist"],
+  // pdfjs-dist stays external. The pm-AMM SDK is ESM that does `import { BN } from "@anchor-lang/core"`
+  // (CommonJS); Node's native ESM loader rejects that named import (seen in CI), so bundle both and
+  // let webpack handle the interop.
+  transpilePackages: ["@pm-amm/sdk", "@anchor-lang/core"],
+  serverExternalPackages: ["pdfjs-dist"],
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

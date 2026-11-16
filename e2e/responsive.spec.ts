@@ -23,7 +23,7 @@ test("@mobile landing page and Market Architect fit a phone screen", async ({ pa
   await page.goto("/architect");
   await page.getByLabel("Market question").fill("Will the Fed significantly cut rates soon?");
   await page.getByRole("button", { name: "Analyse question" }).click();
-  await expect(page.getByText("Resolution rules")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Resolution rules" })).toBeVisible();
   await noHorizontalOverflow(page);
 });
 
