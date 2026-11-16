@@ -1,0 +1,496 @@
+// IntelPro — relational schema.
+// Every table that can hold seeded content carries `isDemo` so demonstration
+// data is always distinguishable from live data in the UI and API.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MARKET_CREATOR
+  REVIEWER
+  ADMIN
+}
+
+enum MarketStatus {
+  DRAFT
+  ACTIVE
+  AWAITING_RESOLUTION
+  RESOLUTION_PROPOSED
+  DISPUTED
+  RESOLVED
+  CANCELLED
+}
+
+enum DataOrigin {
+  DEMO
+  USER
+  PREDICT_DEVNET
+  PREDICT_MAINNET
+}
+
+enum Outcome {
+  YES
+  NO
+}
+
+enum AnalysisEngine {
+  AI
+  HEURISTIC
+}
+
+enum EvidenceStatus {
+  SUBMITTED
+  ACCESSIBLE
+  ANALYSED
+  CORROBORATED
+  CONTRADICTED
+  UNABLE_TO_VERIFY
+}
+
+enum EvidenceStance {
+  SUPPORTS_YES
+  SUPPORTS_NO
+  NEUTRAL
+  UNCLASSIFIED
+}
+
+enum EvidenceCategory {
+  OFFICIAL_DATA
+  MARKET_DATA
+  ONCHAIN_DATA
+  NEWS_REPORT
+  OFFICIAL_STATEMENT
+  RESEARCH
+  SOCIAL_MEDIA
+  OTHER
+}
+
+enum Recommendation {
+  YES_SUPPORTED
+  NO_SUPPORTED
+  INCONCLUSIVE
+  INSUFFICIENT_EVIDENCE
+}
+
+enum DisputeStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  EVIDENCE_REQUESTED
+  RESOLVED
+  REJECTED
+}
+
+enum CommentKind {
+  COMMENT
+  EVIDENCE_REQUEST
+  DECISION
+  STATUS_CHANGE
+}
+
+enum TxKind {
+  CRITERIA_ANCHOR
+  WALLET_TEST
+  PREDICT_SWAP
+  PREDICT_CREATE_MARKET
+  PREDICT_VAULT_COMMIT
+  PREDICT_RESOLVE
+}
+
+enum AuthTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum EvidenceSourceKind {
+  URL
+  PDF_UPLOAD
+}
+
+enum ExtractionStatus {
+  EXTRACTED
+  NO_TEXT
+  FAILED
+}
+
+enum TxStatus {
+  SUBMITTED
+  CONFIRMED
+  FINALIZED
+  FAILED
+  NOT_FOUND
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(USER)
+  isDemo       Boolean  @default(false)
+  // Null until the user proves control of the address (email link or password reset).
+  emailVerifiedAt DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions        Session[]
+  authTokens      AuthToken[]
+  wallets         Wallet[]
+  walletNonces    WalletNonce[]
+  markets         Market[]                   @relation("MarketCreator")
+  approvedCriteria MarketCriteria[]          @relation("CriteriaApprover")
+  evidence        Evidence[]                 @relation("EvidenceSubmitter")
+  recommendations ResolutionRecommendation[] @relation("RecommendationRequester")
+  disputes        Dispute[]                  @relation("DisputeChallenger")
+  reviews         Dispute[]                  @relation("DisputeReviewer")
+  comments        DisputeComment[]
+  activities      MarketActivity[]
+  transactions    Transaction[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Single-use, time-limited email tokens. Only the SHA-256 of the token is stored.
+model AuthToken {
+  id        String        @id @default(cuid())
+  userId    String
+  type      AuthTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  ip        String?
+  createdAt DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model Wallet {
+  id         String   @id @default(cuid())
+  userId     String
+  address    String   @unique
+  network    String   @default("devnet")
+  label      String?
+  verifiedAt DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WalletNonce {
+  id        String    @id @default(cuid())
+  userId    String
+  address   String
+  nonce     String    @unique
+  message   String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, address])
+}
+
+model Market {
+  id                 String       @id @default(cuid())
+  question           String
+  description        String?
+  category           String
+  status             MarketStatus @default(DRAFT)
+  origin             DataOrigin   @default(USER)
+  isDemo             Boolean      @default(false)
+  creatorId          String?
+  resolutionDeadline DateTime?
+  // Link to an on-chain PREDICT pm-AMM market (base58 PDA), when one exists.
+  predictMarketPda   String?      @unique
+  // SHA-256 of the approved criteria, and the devnet memo tx that anchored it.
+  criteriaHash       String?
+  anchorSignature    String?
+  proposedOutcome    Outcome?
+  finalOutcome       Outcome?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  creator         User?                      @relation("MarketCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  criteria        MarketCriteria[]
+  evidence        Evidence[]
+  recommendations ResolutionRecommendation[]
+  disputes        Dispute[]
+  activities      MarketActivity[]
+  transactions    Transaction[]
+
+  @@index([status])
+  @@index([category])
+  @@index([resolutionDeadline])
+  @@index([isDemo])
+}
+
+model MarketCriteria {
+  id                 String         @id @default(cuid())
+  marketId           String
+  version            Int
+  originalQuestion   String
+  improvedQuestion   String
+  yesCondition       String
+  noCondition        String
+  resolutionDeadline DateTime
+  timezone           String         @default("UTC")
+  dataSource         String
+  dataSourceUrl      String?
+  methodology        String
+  clarityScore       Int
+  // [{ code, severity, message, excerpt? }]
+  issues             Json
+  engine             AnalysisEngine
+  model              String?
+  approved           Boolean        @default(false)
+  approvedAt         DateTime?
+  approvedById       String?
+  createdAt          DateTime       @default(now())
+
+  market          Market                     @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  approvedBy      User?                      @relation("CriteriaApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  recommendations ResolutionRecommendation[]
+
+  @@unique([marketId, version])
+  @@index([marketId, approved])
+}
+
+model Evidence {
+  id            String           @id @default(cuid())
+  marketId      String
+  submittedById String?
+  disputeId     String?
+  title         String
+  sourceName    String
+  sourceKind    EvidenceSourceKind @default(URL)
+  // Required for URL evidence; optional original location for uploaded PDFs.
+  sourceUrl     String?
+  description   String
+  publishedAt   DateTime?
+  category      EvidenceCategory @default(OTHER)
+  // Stance claimed by the submitter. The analysis records its own stance separately.
+  claimedStance EvidenceStance   @default(UNCLASSIFIED)
+  status        EvidenceStatus   @default(SUBMITTED)
+  isDemo        Boolean          @default(false)
+  httpStatus    Int?
+  contentHash   String?
+  fetchedAt     DateTime?
+  fetchError    String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  market      Market             @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  submittedBy User?              @relation("EvidenceSubmitter", fields: [submittedById], references: [id], onDelete: SetNull)
+  dispute     Dispute?           @relation(fields: [disputeId], references: [id], onDelete: SetNull)
+  analyses    EvidenceAnalysis[]
+  file        EvidenceFile?
+
+  @@index([marketId, createdAt])
+  @@index([status])
+  @@index([disputeId])
+}
+
+/// Uploaded PDF evidence. Stored in the database (bounded at 10 MB) so deployments need no object store.
+model EvidenceFile {
+  id               String           @id @default(cuid())
+  evidenceId       String           @unique
+  fileName         String
+  mimeType         String
+  sizeBytes        Int
+  sha256           String
+  pageCount        Int?
+  data             Bytes
+  extractionStatus ExtractionStatus
+  extractionError  String?
+  extractedText    String?
+  extractedChars   Int              @default(0)
+  createdAt        DateTime         @default(now())
+
+  evidence Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  @@index([sha256])
+}
+
+model EvidenceAnalysis {
+  id               String         @id @default(cuid())
+  evidenceId       String
+  engine           AnalysisEngine
+  model            String?
+  sourceAccessible Boolean
+  excerpt          String?
+  summary          String
+  stance           EvidenceStance
+  relevance        Float
+  // [{ text, supports: "YES" | "NO" | "NEUTRAL" }]
+  claims           Json
+  reasoning        String
+  createdAt        DateTime       @default(now())
+
+  evidence Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  @@index([evidenceId, createdAt])
+}
+
+model ResolutionRecommendation {
+  id                 String         @id @default(cuid())
+  marketId           String
+  criteriaId         String
+  requestedById      String?
+  recommendation     Recommendation
+  confidence         Float
+  reasoning          String
+  uncertainty        String
+  missingInformation Json
+  // Only IDs of Evidence rows that belong to this market survive validation.
+  citedEvidenceIds   String[]
+  rejectedCitations  String[]
+  engine             AnalysisEngine
+  model              String?
+  isDemo             Boolean        @default(false)
+  createdAt          DateTime       @default(now())
+
+  market      Market         @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  criteria    MarketCriteria @relation(fields: [criteriaId], references: [id], onDelete: Cascade)
+  requestedBy User?          @relation("RecommendationRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  disputes    Dispute[]
+
+  @@index([marketId, createdAt])
+}
+
+model Dispute {
+  id               String        @id @default(cuid())
+  marketId         String
+  recommendationId String?
+  challengerId     String
+  reviewerId       String?
+  reason           String
+  status           DisputeStatus @default(SUBMITTED)
+  decision         String?
+  decidedAt        DateTime?
+  isDemo           Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  market         Market                    @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  recommendation ResolutionRecommendation? @relation(fields: [recommendationId], references: [id], onDelete: SetNull)
+  challenger     User                      @relation("DisputeChallenger", fields: [challengerId], references: [id], onDelete: Restrict)
+  reviewer       User?                     @relation("DisputeReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  evidence       Evidence[]
+  comments       DisputeComment[]
+
+  @@index([marketId])
+  @@index([status])
+}
+
+model DisputeComment {
+  id        String      @id @default(cuid())
+  disputeId String
+  authorId  String
+  kind      CommentKind @default(COMMENT)
+  body      String
+  createdAt DateTime    @default(now())
+
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([disputeId, createdAt])
+}
+
+model MarketActivity {
+  id        String   @id @default(cuid())
+  marketId  String
+  actorId   String?
+  type      String
+  message   String
+  metadata  Json?
+  isDemo    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  market Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  actor  User?  @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([marketId, createdAt])
+  @@index([createdAt])
+}
+
+model Transaction {
+  id            String    @id @default(cuid())
+  userId        String
+  marketId      String?
+  walletAddress String
+  signature     String    @unique
+  network       String
+  kind          TxKind
+  status        TxStatus  @default(SUBMITTED)
+  slot          BigInt?
+  blockTime     DateTime?
+  error         String?
+  memo          String?
+  verifiedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  market Market? @relation(fields: [marketId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([marketId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([createdAt])
+}

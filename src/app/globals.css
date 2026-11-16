@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-ground: #0e1012;
+  --color-surface: #15181b;
+  --color-raised: #1b1f23;
+  --color-hover: #21262b;
+  --color-line: #262b30;
+  --color-line-strong: #343a41;
+
+  --color-fg: #e9ecee;
+  --color-muted: #98a0a8;
+  --color-faint: #687079;
+
+  --color-emerald: #2fb383;
+  --color-emerald-soft: #5cc9a0;
+  --color-emerald-deep: #1e7a5a;
+  --color-emerald-wash: rgb(47 179 131 / 0.1);
+
+  --color-amber: #d4a246;
+  --color-amber-wash: rgb(212 162 70 / 0.1);
+  --color-rust: #d0624e;
+  --color-rust-wash: rgb(208 98 78 / 0.1);
+  --color-steel: #7a9cc6;
+  --color-steel-wash: rgb(122 156 198 / 0.12);
+
+  --radius-container: 10px;
+  --radius-control: 6px;
+  --radius-chip: 4px;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--color-ground);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "tnum" 1, "ss02" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: rgb(47 179 131 / 0.3);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-emerald);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .prose-intel p + p {
+    margin-top: 0.75rem;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+  /* Problem phrases in the Market Architect: the signature visual. */
+  .flag-critical {
+    text-decoration: underline wavy var(--color-rust);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+  }
+  .flag-major {
+    text-decoration: underline wavy var(--color-amber);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+  }
+  .flag-minor {
+    text-decoration: underline dotted var(--color-muted);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+  }
+}
+
+/* Solana wallet-adapter modal, restyled to the IntelPro palette. */
+.wallet-adapter-button {
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  height: 34px !important;
+  padding: 0 12px !important;
+  border-radius: var(--radius-control) !important;
+  background: var(--color-raised) !important;
+  border: 1px solid var(--color-line-strong) !important;
+  color: var(--color-fg) !important;
+}
+.wallet-adapter-button:not([disabled]):hover {
+  background: var(--color-hover) !important;
+}
+.wallet-adapter-button-start-icon img,
+.wallet-adapter-button-start-icon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 8px !important;
+}
+.wallet-adapter-modal-wrapper {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-line) !important;
+  border-radius: var(--radius-container) !important;
+  font-family: var(--font-sans) !important;
+}
+.wallet-adapter-modal-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+.wallet-adapter-modal-list .wallet-adapter-button {
+  background: transparent !important;
+  border: none !important;
+  height: 44px !important;
+}
+.wallet-adapter-dropdown-list {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-line) !important;
+  border-radius: var(--radius-control) !important;
+  font-family: var(--font-sans) !important;
+}
+.wallet-adapter-dropdown-list-item {
+  font-size: 13px !important;
+  border-radius: 4px !important;
+}
