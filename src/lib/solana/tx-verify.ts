@@ -1,7 +1,7 @@
 /**
  * Transaction verification against the chain. The analyser is pure and unit
  * tested with RPC-shaped fixtures; `fetchChainTransaction` performs JSON-RPC calls.
- * IntelPro never marks a transaction successful unless the cluster says so.
+ * Lockline never marks a transaction successful unless the cluster says so.
  */
 
 export type ParsedIx = { programId: string; program?: string; parsed?: unknown };
@@ -59,7 +59,7 @@ export function analyseTransaction(
   const checks: ChainVerdict["checks"] = [];
   if (expect.signer) checks.push({ name: "signer", passed: signers.includes(expect.signer), detail: `Expected signer ${expect.signer}` });
   if (expect.programId) checks.push({ name: "program", passed: programIds.includes(expect.programId), detail: `Expected program ${expect.programId}` });
-  if (expect.memo) checks.push({ name: "memo", passed: memos.some((m) => m.replace(/^\[\d+\]\s*/, "") === expect.memo), detail: "Expected IntelPro criteria memo" });
+  if (expect.memo) checks.push({ name: "memo", passed: memos.some((m) => m.replace(/^\[\d+\]\s*/, "") === expect.memo), detail: "Expected Lockline criteria memo" });
   if (tx && checks.some((c) => !c.passed) && st !== "FAILED") st = "FAILED";
 
   return {

@@ -10,7 +10,7 @@ import { DemoBadge, IntegrityBadge, MarketStatusBadge } from "@/components/domai
 import { PredictMarketList } from "./predict-list";
 import { formatDate, cn } from "@/lib/utils";
 
-export const metadata = { title: "Market Explorer" };
+export const metadata = { title: "Markets" };
 
 export default async function MarketsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const sp = await searchParams;
@@ -21,13 +21,13 @@ export default async function MarketsPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHeader
-        title="Market Explorer"
-        description="Markets monitored by IntelPro, and live markets read directly from the PREDICT pm-AMM program on Solana."
+        title="Markets"
+        description="Markets whose rules were checked and locked with Lockline, and live markets read directly from the PREDICT pm-AMM program on Solana."
         actions={<ButtonLink href="/architect" variant="primary">New market</ButtonLink>}
       />
       <div className="mb-5 flex gap-1 border-b border-line" role="tablist">
         {[
-          { key: "intelpro", label: "IntelPro markets" },
+          { key: "intelpro", label: "Locked markets" },
           { key: "predict", label: "Live PREDICT markets" },
         ].map((t) => (
           <Link
@@ -104,7 +104,7 @@ export default async function MarketsPage({ searchParams }: { searchParams: Prom
               </Table>
             </Card>
           )}
-          <p className="mt-3 text-[12px] text-faint">Prices, volume and liquidity exist only for markets linked to an on-chain PREDICT market. IntelPro never shows estimated prices for unlinked markets.</p>
+          <p className="mt-3 text-[12px] text-faint">Prices, volume and liquidity exist only for markets linked to an on-chain PREDICT market. Lockline never shows estimated prices for unlinked markets.</p>
         </>
       )}
     </>

@@ -21,7 +21,7 @@ export default async function IntegrityPage({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <PageHeader title="IntelPro Market Integrity Monitor" description="Every status comes from named rules applied to stored rules, evidence, deadlines and disputes. Nothing here is an AI label." />
+      <PageHeader title="Lockline Market Integrity Monitor" description="Every status comes from named rules applied to stored rules, evidence, deadlines and disputes. Nothing here is an AI label." />
       <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="Healthy" value={count("HEALTHY")} href="/integrity?integrity=HEALTHY" tone="emerald" />
         <Stat label="Needs attention" value={count("NEEDS_ATTENTION")} href="/integrity?integrity=NEEDS_ATTENTION" tone="amber" />

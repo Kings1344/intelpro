@@ -76,7 +76,7 @@ export default async function PortfolioPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <Card>
-          <CardHeader title="Transactions recorded by IntelPro" description="Status comes only from the cluster. Pending or unseen transactions are never shown as successful." />
+          <CardHeader title="Transactions recorded by Lockline" description="Status comes only from the cluster. Pending or unseen transactions are never shown as successful." />
           {p.transactions.length === 0 ? <CardBody><p className="text-[13px] text-muted">None yet. Anchoring rules, launching on PREDICT and trades appear here.</p></CardBody> : (
             <Table head={["Signature", "Type", "Market", "Status", "Recorded", ""]}>
               {p.transactions.map((t) => (

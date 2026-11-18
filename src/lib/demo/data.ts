@@ -3,7 +3,7 @@
  * ILLUSTRATIVE — not real market data. URLs use RFC 2606 reserved example domains
  * so nothing can be mistaken for a real, verified source.
  * Criteria v1, evidence statuses and recommendations are computed by the real
- * IntelPro engines at seed time (see prisma/seed.ts), not hand-written.
+ * Lockline engines at seed time (see prisma/seed.ts), not hand-written.
  */
 export const DEMO_NOTICE = "Demonstration data — illustrative figures, not real-world verification.";
 

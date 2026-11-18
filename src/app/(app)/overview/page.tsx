@@ -28,7 +28,7 @@ export default async function OverviewPage() {
   if (t.markets === 0) {
     return (
       <>
-        <PageHeader title="Overview" description="Market integrity across everything IntelPro monitors." />
+        <PageHeader title="Overview" description="Market integrity across everything Lockline monitors." />
         <EmptyState
           icon={<Sparkles />}
           title="No markets monitored yet"
@@ -43,7 +43,7 @@ export default async function OverviewPage() {
     <>
       <PageHeader
         title="Overview"
-        description="Market integrity across everything IntelPro monitors."
+        description="Market integrity across everything Lockline monitors."
         actions={<ButtonLink href="/architect" variant="primary">New market</ButtonLink>}
       />
       {user && <Onboarding userId={user.id} />}
@@ -64,7 +64,7 @@ export default async function OverviewPage() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">
         <Card>
-          <CardHeader title="IntelPro Intelligence Feed" description="Observations that need a human decision, newest first." />
+          <CardHeader title="Lockline Intelligence Feed" description="Observations that need a human decision, newest first." />
           {d.feed.length === 0 ? (
             <CardBody>
               <p className="text-[13px] text-muted">Nothing needs attention. New ambiguities, contradictions, deadlines and disputes appear here.</p>

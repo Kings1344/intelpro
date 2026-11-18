@@ -8,7 +8,7 @@ import { activity, audit, notify } from "@/lib/server/audit";
 const OPEN = ["SUBMITTED", "UNDER_REVIEW", "EVIDENCE_REQUESTED"];
 
 /**
- * Reviewer workflow. This is an IntelPro review process recorded in the audit
+ * Reviewer workflow. This is an Lockline review process recorded in the audit
  * trail — not a decentralised arbitration protocol.
  */
 export const POST = route<{ id: string }>({ auth: true }, async ({ req, params, user, ip }) => {

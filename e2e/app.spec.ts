@@ -5,9 +5,10 @@ const ADMIN = { email: process.env.SEED_ADMIN_EMAIL ?? "admin@intelpro.dev", pas
 
 test("dashboard shows consistent, labelled demo data and every sidebar section loads", async ({ page }) => {
   await login(page, ADMIN.email, ADMIN.password);
-  await page.waitForURL("**/overview");
+  await page.waitForURL("**/markets");
+  await page.goto("/overview");
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
-  await expect(page.getByText("IntelPro Intelligence Feed")).toBeVisible();
+  await expect(page.getByText("Lockline Intelligence Feed")).toBeVisible();
   await expect(page.getByText("Demo data").first()).toBeVisible();
 
   // "Markets monitored" equals the number of rows in the Market Explorer.
@@ -15,7 +16,7 @@ test("dashboard shows consistent, labelled demo data and every sidebar section l
   await page.goto("/markets");
   await expect(page.locator("tbody tr")).toHaveCount(monitored);
 
-  for (const [label, heading] of [["Market Explorer", "Market Explorer"], ["Market Architect", "Market Architect"], ["Evidence Vault", "Evidence Vault"], ["Resolution Intelligence", "Resolution Intelligence"], ["Integrity Monitor", "IntelPro Market Integrity Monitor"], ["Disputes", "Disputes"], ["Portfolio", "Portfolio"], ["Settings", "Settings"]]) {
+  for (const [label, heading] of [["Write rules", "Write rules"], ["Markets", "Markets"], ["Resolve", "Resolve"], ["Settings", "Settings"]]) {
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: label }).click();
     await expect(page.getByRole("heading", { name: heading, level: 1 })).toBeVisible();
     await expect(page.getByText("This page could not load")).toHaveCount(0);
@@ -61,7 +62,7 @@ test("Market Architect: flags the question, blocks inconsistent rules, then crea
 
 test("resolution: recommendation cites only stored evidence and is labelled as advisory", async ({ page }) => {
   await login(page, ADMIN.email, ADMIN.password);
-  await page.waitForURL("**/overview");
+  await page.waitForURL("**/markets");
   await page.goto("/resolution");
   await page.getByRole("link", { name: /Bitcoin reach \$150,000|BTC\/USD price published by CoinGecko reach or exceed \$150,000/ }).first().click();
   await page.getByRole("button", { name: "Generate recommendation" }).click();

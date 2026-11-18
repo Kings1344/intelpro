@@ -6,7 +6,7 @@ import { getPredictMarket } from "@/lib/predict/server";
 import { activity, audit } from "@/lib/server/audit";
 
 /**
- * Links an IntelPro market to a PREDICT pm-AMM market created by the user's wallet.
+ * Links an Lockline market to a PREDICT pm-AMM market created by the user's wallet.
  * Requires: a confirmed creation tx signed by the user's verified wallet that
  * invoked the pm-AMM program, and an on-chain market account whose authority is that wallet.
  */

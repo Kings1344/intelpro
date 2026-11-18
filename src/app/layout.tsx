@@ -7,8 +7,8 @@ const plexSans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-mono", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "IntelPro: Intelligence Behind Every Prediction", template: "%s | IntelPro" },
-  description: "AI-powered prediction-market intelligence and verification on Solana: clear rules, verifiable evidence, transparent resolution.",
+  title: { default: "Lockline: prediction markets with rules that can\u2019t be disputed", template: "%s | Lockline" },
+  description: "Write market rules that resolve cleanly, lock them on-chain, and launch them as PREDICT pm-AMM markets on Solana.",
 };
 
 export const viewport: Viewport = { themeColor: "#0e1012", width: "device-width", initialScale: 1 };

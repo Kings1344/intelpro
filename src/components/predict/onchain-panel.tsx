@@ -86,7 +86,7 @@ export function OnchainPanel(p: Props) {
         </div>
       ) : !chain.linked ? (
         <Notice tone="amber">
-          Wallet {shortAddress(chain.address)} is connected but not linked to your account. <Link href="/settings" className="underline">Link it in Settings</Link> so IntelPro can verify its transactions.
+          Wallet {shortAddress(chain.address)} is connected but not linked to your account. <Link href="/settings" className="underline">Link it in Settings</Link> so Lockline can verify its transactions.
         </Notice>
       ) : null}
 

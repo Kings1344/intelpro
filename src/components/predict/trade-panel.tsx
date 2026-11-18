@@ -195,7 +195,7 @@ export function TradePanel({ market, linkedWallets, signedIn, intelproMarketId }
       {isAuthority && market.phase === "expired" && (
         <div className="space-y-2 border-t border-line pt-4">
           <p className="font-semibold text-fg">Settle as market authority</p>
-          <p className="text-muted">PREDICT markets are resolved manually by their creator. This is your decision, signed by your wallet. IntelPro recommendations are advisory and never trigger it.</p>
+          <p className="text-muted">PREDICT markets are resolved manually by their creator. This is your decision, signed by your wallet. Lockline recommendations are advisory and never trigger it.</p>
           <div className="flex gap-2">
             {(["yes", "no"] as const).map((s) => (
               <Button key={s} size="sm" variant={s === "yes" ? "secondary" : "danger"} loading={busy === `resolve-${s}`} onClick={async () => {

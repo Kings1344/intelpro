@@ -1,8 +1,18 @@
-# IntelPro
+# Lockline
 
-**Intelligence Behind Every Prediction.**
+**Most market disputes start with one vague word.**
 
-IntelPro is an intelligence and verification layer for prediction markets on Solana and the PREDICT pm-AMM. It helps people write markets that can be resolved without argument, collect evidence that can be checked, and reach outcomes in the open.
+Lockline finds it before launch, locks the fixed rules on Solana, and opens the market on the PREDICT pm-AMM. Traders bet on rules that can't move.
+
+Live: https://intelpro.vercel.app
+
+**The flow:** Write → Lock → Trade → Resolve.
+1. **Write.** Type a question. The checker flags vague deadlines, missing data sources and subjective words, and drafts exact YES/NO conditions.
+2. **Lock.** The approved rules are hashed (SHA-256) and written to Solana with an SPL Memo before the market opens.
+3. **Trade.** The market launches on the PREDICT pm-AMM, linked to that hash.
+4. **Resolve.** The outcome is checked against the locked rules and stored evidence, and can be challenged in the open.
+
+*(Formerly IntelPro; code identifiers still use that name.)*
 
 ![Market Architect](docs/screenshots/architect.png)
 

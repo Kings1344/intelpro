@@ -13,12 +13,12 @@ export default async function ArchitectPage({ searchParams }: { searchParams: Pr
   return (
     <>
       <PageHeader
-        title="Market Architect"
-        description="Paste a prediction-market question. IntelPro finds what could make it ambiguous or disputable, then drafts resolution rules you can edit and approve."
+        title="Write rules"
+        description="Type a market question. Lockline flags what could start a resolution dispute and drafts exact rules. Once approved, the rules are locked on Solana and the market can launch on PREDICT."
       />
       {!aiConfigured() && (
         <Notice tone="neutral" className="mb-5">
-          No AI provider is configured, so analysis runs on IntelPro&apos;s deterministic rules engine. Results are labelled “Heuristic engine, not AI”. Set ANTHROPIC_API_KEY to enable AI analysis.
+          No AI provider is configured, so analysis runs on Lockline&apos;s deterministic rules engine. Results are labelled “Heuristic engine, not AI”. Set ANTHROPIC_API_KEY to enable AI analysis.
         </Notice>
       )}
       {!user ? (

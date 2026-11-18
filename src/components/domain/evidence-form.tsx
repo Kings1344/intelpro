@@ -37,7 +37,7 @@ export function EvidenceFields({ idPrefix = "ev", pdf = false }: { idPrefix?: st
           <Field label="Original URL (optional)" htmlFor={`${idPrefix}-url`} hint="Where the document was published, if anywhere." className="md:col-span-2"><Input id={`${idPrefix}-url`} name="sourceUrl" type="url" placeholder="https://" /></Field>
         </>
       ) : (
-        <Field label="Source URL" htmlFor={`${idPrefix}-url`} hint="Public http(s) page. IntelPro will try to retrieve it." className="md:col-span-2"><Input id={`${idPrefix}-url`} name="sourceUrl" type="url" required placeholder="https://" /></Field>
+        <Field label="Source URL" htmlFor={`${idPrefix}-url`} hint="Public http(s) page. Lockline will try to retrieve it." className="md:col-span-2"><Input id={`${idPrefix}-url`} name="sourceUrl" type="url" required placeholder="https://" /></Field>
       )}
       <Field label="Source name" htmlFor={`${idPrefix}-src`}><Input id={`${idPrefix}-src`} name="sourceName" required minLength={2} placeholder="e.g. CoinGecko" /></Field>
       <Field label="Publication date (if known)" htmlFor={`${idPrefix}-pub`}><Input id={`${idPrefix}-pub`} name="publishedAt" type="date" /></Field>

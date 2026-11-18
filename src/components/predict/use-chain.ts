@@ -29,5 +29,5 @@ export function useChain(linkedWallets: string[]) {
 export function txMessage(tx: VerifiedTx) {
   if (tx.status === "CONFIRMED" || tx.status === "FINALIZED") return { tone: "success" as const, title: `Transaction ${tx.status.toLowerCase()} on-chain` };
   if (tx.status === "FAILED") return { tone: "error" as const, title: "Transaction failed verification", body: tx.error ?? undefined };
-  return { tone: "error" as const, title: `Transaction ${tx.status === "SUBMITTED" ? "submitted, not yet confirmed" : "not found on-chain"}`, body: "IntelPro will only mark it successful once the cluster confirms it. Refresh it from Portfolio." };
+  return { tone: "error" as const, title: `Transaction ${tx.status === "SUBMITTED" ? "submitted, not yet confirmed" : "not found on-chain"}`, body: "Lockline will only mark it successful once the cluster confirms it. Refresh it from Portfolio." };
 }

@@ -63,12 +63,12 @@ export async function sendEmail(email: Email): Promise<void> {
   }
 
   // Development only: surface the message so a developer can follow the link.
-  console.log(`\n[IntelPro dev email] To: ${email.to}\nSubject: ${email.subject}\n${email.text}\n`);
+  console.log(`\n[Lockline dev email] To: ${email.to}\nSubject: ${email.subject}\n${email.text}\n`);
 }
 
 const shell = (title: string, body: string, cta: { href: string; label: string }) => `<!doctype html><html><body style="margin:0;background:#0e1012;font-family:-apple-system,Segoe UI,sans-serif;color:#e9ecee">
 <div style="max-width:520px;margin:0 auto;padding:32px 24px">
-<p style="font-size:15px;font-weight:600;margin:0 0 24px">IntelPro</p>
+<p style="font-size:15px;font-weight:600;margin:0 0 24px">Lockline</p>
 <h1 style="font-size:19px;margin:0 0 12px">${title}</h1>
 <p style="font-size:14px;line-height:1.6;color:#98a0a8;margin:0 0 24px">${body}</p>
 <a href="${cta.href}" style="display:inline-block;background:#2fb383;color:#06130d;text-decoration:none;font-weight:600;font-size:14px;padding:10px 16px;border-radius:6px">${cta.label}</a>
@@ -80,7 +80,7 @@ export function verificationEmail(to: string, link: string): Email {
   return {
     kind: "verify_email",
     to,
-    subject: "Confirm your IntelPro email address",
+    subject: "Confirm your Lockline email address",
     text: `Confirm your email address to start creating markets, submitting evidence and taking part in disputes.\n\n${link}\n\nThis link expires in 24 hours and can be used once.`,
     html: shell("Confirm your email address", "Confirm your email address to start creating markets, submitting evidence and taking part in disputes. This link expires in 24 hours and can be used once.", { href: link, label: "Confirm email" }),
   };
@@ -90,7 +90,7 @@ export function resetEmail(to: string, link: string): Email {
   return {
     kind: "password_reset",
     to,
-    subject: "Reset your IntelPro password",
+    subject: "Reset your Lockline password",
     text: `Use this link to choose a new password. It expires in 30 minutes and can be used once. All your existing sessions will be signed out.\n\n${link}`,
     html: shell("Reset your password", "Use this link to choose a new password. It expires in 30 minutes and can be used once. All your existing sessions will be signed out.", { href: link, label: "Choose a new password" }),
   };

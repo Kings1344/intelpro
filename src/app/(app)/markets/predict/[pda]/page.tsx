@@ -38,7 +38,7 @@ export default async function PredictMarketPage({ params }: { params: Promise<{ 
       <PageHeader
         title={m.name}
         meta={<><LiveBadge /><Badge tone={m.phase === "open" ? "emerald" : "neutral"}>{m.phase}</Badge></>}
-        description={linked ? <>Monitored by IntelPro: <Link className="text-emerald hover:underline" href={`/markets/${linked.id}`}>view rules, evidence and integrity</Link>.</> : "Not linked to an IntelPro market, so it has no approved rules or evidence vault here."}
+        description={linked ? <>Monitored by Lockline: <Link className="text-emerald hover:underline" href={`/markets/${linked.id}`}>view rules, evidence and integrity</Link>.</> : "Not linked to an Lockline market, so it has no approved rules or evidence vault here."}
       />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">

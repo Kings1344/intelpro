@@ -41,12 +41,12 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ i
         actions={
           <>
             <ButtonLink href={`/evidence/${m.id}`}>Evidence vault</ButtonLink>
-            <ButtonLink href={`/resolution/${m.id}`} variant="primary">Resolution intelligence</ButtonLink>
+            <ButtonLink href={`/resolution/${m.id}`} variant="primary">Resolve</ButtonLink>
           </>
         }
       />
-      {m.isDemo && <Notice tone="amber" className="mb-5">{DEMO_NOTICE} Rules, statuses and recommendations on this page were computed by IntelPro&apos;s engines from the sample records.</Notice>}
-      {m.proposedOutcome && <Notice tone="steel" className="mb-5">Proposed outcome inside IntelPro: <strong>{m.proposedOutcome}</strong>. This is not on-chain settlement; the market&apos;s designated resolution mechanism settles.</Notice>}
+      {m.isDemo && <Notice tone="amber" className="mb-5">{DEMO_NOTICE} Rules, statuses and recommendations on this page were computed by Lockline&apos;s engines from the sample records.</Notice>}
+      {m.proposedOutcome && <Notice tone="steel" className="mb-5">Proposed outcome inside Lockline: <strong>{m.proposedOutcome}</strong>. This is not on-chain settlement; the market&apos;s designated resolution mechanism settles.</Notice>}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">

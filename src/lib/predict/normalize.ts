@@ -1,6 +1,6 @@
 /**
  * Normalises raw pm-AMM `MarketAccount` data (from @pm-amm/sdk `fetchAllMarkets`)
- * into IntelPro's view model. Pure; math is injected (production: `@pm-amm/sdk/math`).
+ * into Lockline's view model. Pure; math is injected (production: `@pm-amm/sdk/math`).
  *
  * Encodings verified against sparkfun-labs/pm-amm @ d5b407b:
  * - lZero, reserveYes, reserveNo, cumYes/NoPerShare: I80F48 fixed-point → `i80f48ToNumber`

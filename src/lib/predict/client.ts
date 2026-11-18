@@ -1,7 +1,7 @@
 "use client";
 /**
  * PREDICT pm-AMM — browser service. Every write is signed by the user's own
- * wallet through @solana/wallet-adapter; IntelPro never holds keys.
+ * wallet through @solana/wallet-adapter; Lockline never holds keys.
  * Signatures, units and directions follow the official SDK reference
  * (packages/sdk/llms.txt in sparkfun-labs/pm-amm).
  */
@@ -155,5 +155,5 @@ export function truncateUtf8(s: string, maxBytes: number) {
   const enc = new TextEncoder();
   let out = s.trim();
   while (enc.encode(out).length > maxBytes) out = out.slice(0, -1);
-  return out || "IntelPro market";
+  return out || "Lockline market";
 }

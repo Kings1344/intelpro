@@ -27,14 +27,14 @@ export function VerifyEmail() {
       <div className="space-y-4" data-testid="verify-ok">
         <h1 className="flex items-center gap-2 text-[19px] font-semibold"><CheckCircle2 className="size-5 text-emerald" /> Email confirmed</h1>
         <p className="text-[13.5px] text-muted">You can now create markets, submit evidence and take part in disputes.</p>
-        <ButtonLink href="/overview" variant="primary" className="w-full">Go to IntelPro</ButtonLink>
+        <ButtonLink href="/markets" variant="primary" className="w-full">Go to Lockline</ButtonLink>
       </div>
     );
   return (
     <div className="space-y-4" data-testid="verify-error">
       <h1 className="flex items-center gap-2 text-[19px] font-semibold"><AlertTriangle className="size-5 text-rust" /> Email not confirmed</h1>
       <p className="text-[13.5px] text-muted">{state.message}</p>
-      <p className="text-[13px] text-faint">Signed in? Use “Resend email” in the banner at the top of IntelPro. Otherwise <Link className="text-emerald hover:underline" href="/login">sign in</Link> first.</p>
+      <p className="text-[13px] text-faint">Signed in? Use “Resend email” in the banner at the top of Lockline. Otherwise <Link className="text-emerald hover:underline" href="/login">sign in</Link> first.</p>
     </div>
   );
 }

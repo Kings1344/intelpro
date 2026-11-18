@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * IntelPro mark: four viewfinder brackets (verification, precision) framing a
+ * Lockline mark: four viewfinder brackets (verification, precision) framing a
  * single node (the resolved signal). Geometric, monochrome-friendly.
  */
 export function LogoMark({ size = 28, className }: { size?: number; className?: string }) {
@@ -19,7 +19,7 @@ export function Logo({ className, compact = false }: { className?: string; compa
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoMark />
-      {!compact && <span className="text-[15px] font-semibold tracking-[-0.01em] text-fg">IntelPro</span>}
+      {!compact && <span className="text-[15px] font-semibold tracking-[-0.01em] text-fg">Lockline</span>}
     </span>
   );
 }

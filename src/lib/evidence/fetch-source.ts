@@ -47,7 +47,7 @@ export async function fetchEvidenceSource(rawUrl: string): Promise<FetchResult> 
         redirect: "manual",
         signal: AbortSignal.timeout(TIMEOUT_MS),
         headers: {
-          "user-agent": "IntelProEvidenceBot/1.0 (+evidence verification; respects robots by design)",
+          "user-agent": "LocklineEvidenceBot/1.0 (+evidence verification; respects robots by design)",
           accept: "text/html,application/xhtml+xml,text/plain,application/json;q=0.9,*/*;q=0.1",
         },
       });

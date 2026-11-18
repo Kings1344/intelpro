@@ -71,7 +71,7 @@ export async function extractPdfText(bytes: Uint8Array): Promise<PdfExtraction> 
         pageCount,
         chars,
         reason: chars === 0
-          ? "The PDF has no text layer. It is probably a scan or an image, and IntelPro does not run OCR, so its contents were not read."
+          ? "The PDF has no text layer. It is probably a scan or an image, and Lockline does not run OCR, so its contents were not read."
           : `Only ${chars} characters of text were found across ${pageCount} page(s). The PDF is probably scanned, so its contents could not be read reliably.`,
       };
     const meta = await doc.getMetadata().catch(() => null);

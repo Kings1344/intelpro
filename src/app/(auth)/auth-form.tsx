@@ -23,7 +23,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       await api(`/api/auth/${mode}`, {
         body: mode === "register" ? { name: f.get("name"), email: f.get("email"), password: f.get("password") } : { email: f.get("email"), password: f.get("password") },
       });
-      router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : "/overview");
+      router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : "/markets");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -52,7 +52,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         {mode === "register" ? (
           <>Already have an account? <Link className="text-emerald hover:underline" href="/login">Sign in</Link></>
         ) : (
-          <>New to IntelPro? <Link className="text-emerald hover:underline" href="/register">Create an account</Link></>
+          <>New to Lockline? <Link className="text-emerald hover:underline" href="/register">Create an account</Link></>
         )}
       </p>
     </form>

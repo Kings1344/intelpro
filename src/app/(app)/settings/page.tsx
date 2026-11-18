@@ -30,7 +30,7 @@ export default async function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Solana wallets" description="Linking proves ownership with a signed message. It is free, sends no transaction, and IntelPro never sees your keys or seed phrase." />
+          <CardHeader title="Solana wallets" description="Linking proves ownership with a signed message. It is free, sends no transaction, and Lockline never sees your keys or seed phrase." />
           <CardBody className="space-y-4">
             {wallets.length > 0 && (
               <ul className="divide-y divide-line rounded-[var(--radius-control)] border border-line">

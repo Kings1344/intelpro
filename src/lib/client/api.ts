@@ -11,7 +11,7 @@ export class ClientApiError extends Error {
   }
 }
 
-/** Typed fetch wrapper for IntelPro's `{ data } | { error }` envelope. */
+/** Typed fetch wrapper for Lockline's `{ data } | { error }` envelope. */
 export async function api<T = unknown>(path: string, opts: { method?: string; body?: unknown } = {}): Promise<T> {
   const res = await fetch(path, {
     method: opts.method ?? (opts.body ? "POST" : "GET"),

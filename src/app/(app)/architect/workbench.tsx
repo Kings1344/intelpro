@@ -92,7 +92,7 @@ export function ArchitectWorkbench({ initialQuestion }: { initialQuestion: strin
     <div className="space-y-6">
       <Card>
         <CardBody className="space-y-4 py-5">
-          <Field label="Market question" htmlFor="q" hint="Write it the way a trader would. IntelPro analyses this exact text.">
+          <Field label="Market question" htmlFor="q" hint="Write it the way a trader would. Lockline analyses this exact text.">
             <Textarea id="q" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Will … happen by …?" className="min-h-[72px] text-[15px]" maxLength={500} />
           </Field>
           <div className="flex flex-wrap items-end gap-3">

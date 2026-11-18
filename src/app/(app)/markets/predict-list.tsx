@@ -48,7 +48,7 @@ export function PredictMarketList() {
       {loading && !data ? (
         <div className="h-40 animate-pulse rounded-[var(--radius-container)] border border-line bg-surface" />
       ) : !data?.markets.length ? (
-        <EmptyState icon={<Radio />} title={data?.status.reachable ? "No open PREDICT markets right now" : "No live data"} body="Create one from any approved IntelPro market (Launch on PREDICT), or include expired markets." />
+        <EmptyState icon={<Radio />} title={data?.status.reachable ? "No open PREDICT markets right now" : "No live data"} body="Create one from any approved Lockline market (Launch on PREDICT), or include expired markets." />
       ) : (
         <Card>
           <Table head={["Market", "YES", "NO", "Vault liquidity", "Ends", "State", "Address"]}>

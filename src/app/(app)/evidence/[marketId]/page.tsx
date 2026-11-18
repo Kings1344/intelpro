@@ -54,7 +54,7 @@ export default async function MarketEvidencePage({ params, searchParams }: { par
             })}
           </div>
           {evidence.length === 0 ? (
-            <EmptyState icon={<Archive />} title={m.evidence.length ? "No evidence with this status" : "No evidence yet"} body="Submit the first source for this market. IntelPro records it as submitted, then retrieves it and checks it against the approved rules when you run analysis." />
+            <EmptyState icon={<Archive />} title={m.evidence.length ? "No evidence with this status" : "No evidence yet"} body="Submit the first source for this market. Lockline records it as submitted, then retrieves it and checks it against the approved rules when you run analysis." />
           ) : (
             <ol className="relative space-y-4 border-l border-line pl-5">
               {evidence.map((e) => (

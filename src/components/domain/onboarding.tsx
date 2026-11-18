@@ -22,7 +22,7 @@ export async function Onboarding({ userId }: { userId: string }) {
   if (left === 0) return null;
   return (
     <div className="mb-6 rounded-[var(--radius-container)] border border-line bg-surface px-5 py-4">
-      <p className="text-[13.5px] font-medium text-fg">Get started with IntelPro</p>
+      <p className="text-[13.5px] font-medium text-fg">Get started with Lockline</p>
       <p className="mt-0.5 text-[12.5px] text-faint">{left} of {steps.length} steps left</p>
       <ol className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
         {steps.map((s) => (

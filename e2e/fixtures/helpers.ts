@@ -35,7 +35,7 @@ export async function register(page: Page, email: string, name = "E2E User") {
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Create account" }).click();
-  await page.waitForURL("**/overview");
+  await page.waitForURL("**/markets");
 }
 
 export async function login(page: Page, email: string, password = PASSWORD) {

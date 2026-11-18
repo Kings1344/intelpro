@@ -4,7 +4,7 @@ export async function register() {
   const { productionProblems } = await import("./lib/server/env-check");
   const problems = productionProblems();
   if (problems.length === 0) return;
-  const msg = `IntelPro refused to start: unsafe production configuration:\n- ${problems.join("\n- ")}`;
+  const msg = `Lockline refused to start: unsafe production configuration:\n- ${problems.join("\n- ")}`;
   if (process.env.ALLOW_UNSAFE_CONFIG === "1") console.error(`${msg}\n(continuing because ALLOW_UNSAFE_CONFIG=1)`);
   else throw new Error(msg);
 }

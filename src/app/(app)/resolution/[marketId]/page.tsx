@@ -13,7 +13,7 @@ import { DemoBadge, EngineBadge, EvidenceStatusBadge, RecommendationBadge, Stanc
 import { ActionButton } from "@/components/domain/action-button";
 import { formatDateTime, relativeTime } from "@/lib/utils";
 
-export const metadata = { title: "Resolution Intelligence" };
+export const metadata = { title: "Resolve" };
 
 export default async function ResolutionPage({ params }: { params: Promise<{ marketId: string }> }) {
   const { marketId } = await params;
@@ -37,7 +37,7 @@ export default async function ResolutionPage({ params }: { params: Promise<{ mar
   return (
     <>
       <PageHeader
-        title="Resolution Intelligence"
+        title="Resolve"
         description={<Link href={`/markets/${m.id}`} className="hover:text-fg">{m.question}</Link>}
         meta={m.isDemo ? <DemoBadge /> : undefined}
         actions={

@@ -26,7 +26,7 @@ export type EvidenceAnalysisResult = {
   aiError: string | null;
 };
 
-const SYSTEM = `You are IntelPro's evidence analyst. You compare retrieved source text against a prediction market's approved resolution criteria.
+const SYSTEM = `You are Lockline's evidence analyst. You compare retrieved source text against a prediction market's approved resolution criteria.
 Rules:
 - Use ONLY the source text provided. Do not use outside knowledge about what happened.
 - Every claim must include a "quote" copied verbatim from the source text. Claims whose quote is not in the text are discarded automatically.
@@ -70,7 +70,7 @@ ${context}
 Return JSON: { "summary": "...", "stance": "SUPPORTS_YES|SUPPORTS_NO|NEUTRAL", "relevance": 0..1, "claims": [{ "text": "...", "supports": "YES|NO|NEUTRAL", "quote": "verbatim from source text" }], "reasoning": "how the text relates to the YES/NO conditions, including what it does NOT establish" }`,
     });
     const { claims, dropped } = groundClaims(data, input.sourceText);
-    const reasoning = dropped ? `${data.reasoning}\n\n[IntelPro] ${dropped} claim(s) were discarded because their quotes were not found in the retrieved source text.` : data.reasoning;
+    const reasoning = dropped ? `${data.reasoning}\n\n[Lockline] ${dropped} claim(s) were discarded because their quotes were not found in the retrieved source text.` : data.reasoning;
     // A directional stance without any grounded directional claim is not trusted.
     const grounded = claims.some((c) => (data.stance === "SUPPORTS_YES" ? c.supports === "YES" : data.stance === "SUPPORTS_NO" ? c.supports === "NO" : true));
     return {
@@ -82,7 +82,7 @@ Return JSON: { "summary": "...", "stance": "SUPPORTS_YES|SUPPORTS_NO|NEUTRAL", "
       stance: grounded ? data.stance : "NEUTRAL",
       relevance: data.relevance,
       claims,
-      reasoning: grounded ? reasoning : `${reasoning}\n\n[IntelPro] Stance reset to NEUTRAL: no grounded claim supports ${data.stance}.`,
+      reasoning: grounded ? reasoning : `${reasoning}\n\n[Lockline] Stance reset to NEUTRAL: no grounded claim supports ${data.stance}.`,
       aiError: null,
     };
   } catch (e) {

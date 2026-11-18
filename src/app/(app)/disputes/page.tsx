@@ -27,7 +27,7 @@ export default async function DisputesPage({ searchParams }: { searchParams: Pro
     <>
       <PageHeader
         title="Disputes"
-        description="Challenges to proposed resolutions and recommendations, reviewed in the open. This is IntelPro's review workflow, not an on-chain arbitration protocol."
+        description="Challenges to proposed resolutions and recommendations, reviewed in the open. This is Lockline's review workflow, not an on-chain arbitration protocol."
         actions={<ButtonLink href="/disputes/new" variant="primary">Submit a challenge</ButtonLink>}
       />
       <div className="mb-4 flex gap-1 border-b border-line">

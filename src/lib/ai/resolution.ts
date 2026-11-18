@@ -26,7 +26,7 @@ export type ResolutionResult = {
   aiError: string | null;
 };
 
-const SYSTEM = `You are IntelPro's resolution analyst. You evaluate stored evidence records against a prediction market's approved criteria and recommend an outcome.
+const SYSTEM = `You are Lockline's resolution analyst. You evaluate stored evidence records against a prediction market's approved criteria and recommend an outcome.
 Hard rules:
 - Use ONLY the evidence records provided. Never introduce facts, sources or citations that are not in the list.
 - Cite records only by their exact "id". Unknown IDs are discarded and a recommendation without valid supporting citations is downgraded.
@@ -94,7 +94,7 @@ Return JSON: { "recommendation": "YES_SUPPORTED|NO_SUPPORTED|INCONCLUSIVE|INSUFF
     return {
       recommendation: v.recommendation,
       confidence: v.confidence,
-      reasoning: v.downgradeReason ? `${v.reasoning}\n\n[IntelPro] ${v.downgradeReason}` : v.reasoning,
+      reasoning: v.downgradeReason ? `${v.reasoning}\n\n[Lockline] ${v.downgradeReason}` : v.reasoning,
       uncertainty: v.uncertainty,
       missingInformation: v.missingInformation,
       citedEvidenceIds: v.citedEvidenceIds,

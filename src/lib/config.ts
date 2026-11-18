@@ -7,8 +7,8 @@ export type SolanaNetwork = "devnet" | "mainnet-beta";
 const network = (process.env.NEXT_PUBLIC_SOLANA_NETWORK ?? "devnet") as SolanaNetwork;
 
 export const publicConfig = {
-  appName: "IntelPro",
-  tagline: "Intelligence Behind Every Prediction.",
+  appName: "Lockline",
+  tagline: "Rules locked before the first trade.",
   solana: {
     network,
     rpcUrl:

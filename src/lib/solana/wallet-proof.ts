@@ -8,7 +8,7 @@ import { base58Decode, isSolanaAddress } from "./base58";
 
 export function buildLinkMessage(p: { address: string; email: string; nonce: string; issuedAt: Date; expiresAt: Date; network: string; domain: string }) {
   return [
-    `${p.domain} wants you to link this Solana wallet to your IntelPro account.`,
+    `${p.domain} wants you to link this Solana wallet to your Lockline account.`,
     "",
     `Wallet: ${p.address}`,
     `Account: ${p.email}`,

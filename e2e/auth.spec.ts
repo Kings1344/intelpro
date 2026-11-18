@@ -44,7 +44,7 @@ test.describe("registration, verification and login", () => {
     await login(page, email, "wrong-password-1");
     await expect(page.getByText("Email or password is incorrect.")).toBeVisible();
     await login(page, email);
-    await page.waitForURL("**/overview");
+    await page.waitForURL("**/markets");
 
     await page.goto("/verify-email?token=not-a-real-token");
     await expect(page.getByTestId("verify-error")).toContainText(/not valid/);
@@ -61,7 +61,7 @@ test.describe("password reset", () => {
     const other = await browser.newContext();
     const otherPage = await other.newPage();
     await login(otherPage, email);
-    await otherPage.waitForURL("**/overview");
+    await otherPage.waitForURL("**/markets");
 
     await page.request.post("/api/auth/logout");
     await page.goto("/forgot-password");
@@ -91,7 +91,7 @@ test.describe("password reset", () => {
     await login(page, email, PASSWORD);
     await expect(page.getByText("Email or password is incorrect.")).toBeVisible();
     await login(page, email, next);
-    await page.waitForURL("**/overview");
+    await page.waitForURL("**/markets");
     await expect(page.getByTestId("verify-banner")).toHaveCount(0);
 
     // Reuse is refused.

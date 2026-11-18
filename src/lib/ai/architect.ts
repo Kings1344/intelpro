@@ -4,7 +4,7 @@ import { architectOutput } from "./schemas";
 import { heuristicArchitect, ruleChecks } from "./heuristics";
 import type { ArchitectResult, Issue } from "./types";
 
-const SYSTEM = `You are IntelPro's Market Architect, a specialist in writing unambiguous, objectively resolvable binary prediction-market rules.
+const SYSTEM = `You are Lockline's Market Architect, a specialist in writing unambiguous, objectively resolvable binary prediction-market rules.
 You analyse ONLY the question you are given. Point to the exact words that cause each problem.
 Never invent facts about the world (prices, results, dates of events). You may recommend widely known authoritative data sources, but if you are not certain a specific URL exists, set dataSourceUrl to null.
 Respond with a single JSON object and nothing else.`;

@@ -1,5 +1,5 @@
 /**
- * IntelPro Market Integrity Monitor — rule engine.
+ * Lockline Market Integrity Monitor — rule engine.
  * Every status is derived from explicit, named rules over stored data (no AI labels).
  * Pure module — unit tested.
  */

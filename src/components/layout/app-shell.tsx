@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, Compass, PenTool, Archive, Scale, ShieldCheck, Gavel, Wallet, Settings, Menu, X, Bell, LogOut, LogIn,
+  Compass, PenTool, Scale, Settings, Menu, X, Bell, LogOut, LogIn,
 } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { WalletButton } from "@/components/wallet/wallet-button";
@@ -13,15 +13,13 @@ import { api } from "@/lib/client/api";
 import { cn, relativeTime } from "@/lib/utils";
 import { ROLE_LABELS, type Role } from "@/lib/auth/rbac";
 
+// One flow: write rules, lock and launch them as a PREDICT market, trade, resolve.
+// The other modules (overview, evidence vault, integrity, disputes, portfolio) still
+// exist and are reached from a market's own page.
 const NAV = [
-  { href: "/overview", label: "Overview", icon: LayoutDashboard },
-  { href: "/markets", label: "Market Explorer", icon: Compass },
-  { href: "/architect", label: "Market Architect", icon: PenTool },
-  { href: "/evidence", label: "Evidence Vault", icon: Archive },
-  { href: "/resolution", label: "Resolution Intelligence", icon: Scale },
-  { href: "/integrity", label: "Integrity Monitor", icon: ShieldCheck },
-  { href: "/disputes", label: "Disputes", icon: Gavel },
-  { href: "/portfolio", label: "Portfolio", icon: Wallet },
+  { href: "/architect", label: "Write rules", icon: PenTool },
+  { href: "/markets", label: "Markets", icon: Compass },
+  { href: "/resolution", label: "Resolve", icon: Scale },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -41,7 +39,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
         )}
       >
         <div className="flex h-14 items-center justify-between px-5">
-          <Link href="/overview" aria-label="IntelPro overview">
+          <Link href="/markets" aria-label="Lockline markets">
             <Logo />
           </Link>
           <button className="text-muted lg:hidden" onClick={() => setOpen(false)} aria-label="Close navigation">
@@ -68,7 +66,7 @@ export function AppShell({ user, children }: { user: User; children: React.React
           })}
         </nav>
         <div className="border-t border-line px-5 py-4 text-[12px] leading-relaxed text-faint">
-          IntelPro recommends; the market&apos;s own resolution mechanism settles.
+          Rules are locked on-chain at launch. Resolution is checked against them.
         </div>
       </aside>
       {open && <div className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={() => setOpen(false)} aria-hidden />}

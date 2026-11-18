@@ -4,7 +4,7 @@ import { proposeResolutionSchema } from "@/lib/validation";
 import { activity, audit, notify } from "@/lib/server/audit";
 
 /**
- * A human reviewer proposes an outcome inside IntelPro, opening the challenge
+ * A human reviewer proposes an outcome inside Lockline, opening the challenge
  * window. This is NOT on-chain settlement: the market's designated resolution
  * mechanism (for PREDICT: the market authority's `resolve_market`) remains responsible.
  */

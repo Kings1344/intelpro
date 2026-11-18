@@ -11,8 +11,8 @@ test("@mobile navigation drawer works and core pages fit the screen", async ({ p
   await expect(page.getByRole("navigation", { name: "Main" })).not.toBeInViewport();
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.getByRole("navigation", { name: "Main" })).toBeInViewport();
-  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Integrity Monitor" }).click();
-  await expect(page.getByRole("heading", { name: "IntelPro Market Integrity Monitor" })).toBeVisible();
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Resolve" }).click();
+  await expect(page.getByRole("heading", { name: "Resolve", level: 1 })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Main" })).not.toBeInViewport();
 });
 
