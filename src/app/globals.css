@@ -40,7 +40,7 @@
     background: var(--color-ground);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    font-feature-settings: "tnum" 1, "ss02" 1;
+    font-feature-settings: "tnum" 1;
     -webkit-font-smoothing: antialiased;
   }
   ::selection {
