@@ -11,6 +11,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { DemoBadge, EngineBadge, EvidenceStatusBadge, IntegrityBadge, MarketStatusBadge, RecommendationBadge } from "@/components/domain/badges";
 import { ActionButton } from "@/components/domain/action-button";
 import { OnchainPanel } from "@/components/predict/onchain-panel";
+import { LockCard } from "@/components/domain/lock-card";
 import { formatDateTime, relativeTime } from "@/lib/utils";
 import { DEMO_NOTICE } from "@/lib/demo/data";
 
@@ -47,6 +48,15 @@ export default async function MarketDetailPage({ params }: { params: Promise<{ i
       />
       {m.isDemo && <Notice tone="amber" className="mb-5">{DEMO_NOTICE} Rules, statuses and recommendations on this page were computed by Lockline&apos;s engines from the sample records.</Notice>}
       {m.proposedOutcome && <Notice tone="steel" className="mb-5">Proposed outcome inside Lockline: <strong>{m.proposedOutcome}</strong>. This is not on-chain settlement; the market&apos;s designated resolution mechanism settles.</Notice>}
+
+      <LockCard
+        marketId={m.id}
+        approvedVersion={approved?.version ?? null}
+        criteriaHash={m.criteriaHash}
+        anchorSignature={m.anchorSignature}
+        predictMarketPda={m.predictMarketPda}
+        isDemo={m.isDemo}
+      />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">

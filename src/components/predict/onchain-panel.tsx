@@ -91,18 +91,18 @@ export function OnchainPanel(p: Props) {
       ) : null}
 
       <section className="space-y-2">
-        <h3 className="flex items-center gap-2 font-semibold text-fg"><Anchor className="size-4 text-faint" /> Rules anchored on Solana</h3>
+        <h3 className="flex items-center gap-2 font-semibold text-fg"><Anchor className="size-4 text-faint" /> 1. Lock the rules on Solana</h3>
         {p.anchorSignature && p.criteriaHash ? (
           <div className="space-y-1">
-            <p className="text-emerald-soft">Confirmed. The approved rules&apos; SHA-256 is recorded in a memo transaction.</p>
+            <p className="text-emerald-soft">Locked. The approved rules&apos; SHA-256 is recorded in a memo transaction.</p>
             <p><Mono>{shortAddress(p.criteriaHash, 10)}</Mono></p>
             <a className="inline-flex items-center gap-1 text-emerald hover:underline" href={explorerTxUrl(p.anchorSignature)} target="_blank" rel="noreferrer">View transaction <ExternalLink className="size-3.5" /></a>
           </div>
         ) : (
           <>
-            <p className="text-muted">Write a tamper-evident fingerprint of the approved rules to Solana, so anyone can prove which rules traders agreed to.</p>
+            <p className="text-muted">Write a fingerprint (SHA-256) of the approved rules to Solana before anyone trades, so anyone can later prove which rules the market was opened on.</p>
             <Button size="sm" disabled={!p.approved || !p.isCreator || !ready || !chain.linked} loading={busy === "anchor"} onClick={() => run("anchor", anchor)}>
-              Anchor approved rules
+              Lock rules on Solana
             </Button>
             {!p.approved && <p className="text-faint">Approve the rules first.</p>}
           </>
@@ -110,7 +110,7 @@ export function OnchainPanel(p: Props) {
       </section>
 
       <section className="space-y-2 border-t border-line pt-4">
-        <h3 className="flex items-center gap-2 font-semibold text-fg"><Rocket className="size-4 text-faint" /> PREDICT pm-AMM market</h3>
+        <h3 className="flex items-center gap-2 font-semibold text-fg"><Rocket className="size-4 text-faint" /> 2. Launch on PREDICT pm-AMM</h3>
         {p.predictMarketPda ? (
           <div className="space-y-1">
             <p className="text-emerald-soft">Linked to a live on-chain market.</p>
@@ -122,6 +122,7 @@ export function OnchainPanel(p: Props) {
         ) : (
           <>
             <p className="text-muted">Create a binary pm-AMM market with these rules as its name and the approved deadline as its expiry. Your wallet signs and seeds the liquidity in mUSDC.</p>
+            {!p.anchorSignature && <p className="text-faint">Lock the rules first. Lockline only launches markets whose rules are already on-chain.</p>}
             <div className="grid grid-cols-2 gap-2">
               <Field label="Liquidity (mUSDC)" htmlFor="dep"><Input id="dep" type="number" min={1} value={deposit} onChange={(e) => setDeposit(e.target.value)} /></Field>
               <Field label="Initial YES price" htmlFor="bps">
@@ -131,7 +132,7 @@ export function OnchainPanel(p: Props) {
               </Field>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button size="sm" variant="primary" disabled={!p.approved || !p.isCreator || !ready || !chain.linked} loading={busy === "launch"} onClick={() => run("launch", launch)}>Launch on PREDICT</Button>
+              <Button size="sm" variant="primary" disabled={!p.approved || !p.isCreator || !ready || !chain.linked || !p.anchorSignature} loading={busy === "launch"} onClick={() => run("launch", launch)}>Launch on PREDICT</Button>
               {chain.address && publicConfig.solana.network === "devnet" && (
                 <Button size="sm" variant="ghost" loading={busy === "faucet"} onClick={() => run("faucet", async () => { const r = await requestDevnetUsdc(chain.address!); push({ tone: r.ok ? "success" : "error", title: r.message }); })}>Get devnet mUSDC</Button>
               )}

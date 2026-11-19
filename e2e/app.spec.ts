@@ -58,6 +58,21 @@ test("Market Architect: flags the question, blocks inconsistent rules, then crea
   await page.getByRole("button", { name: "Approve rules and create market" }).click();
   await page.waitForURL(/\/markets\/[a-z0-9]+$/);
   await expect(page.getByText(/Approved resolution rules, v1/).first()).toBeVisible();
+  // The lock strip shows approval done and the on-chain lock still to do; no verify button without a lock.
+  const lock = page.getByRole("region", { name: "Rules lock" });
+  await expect(lock.getByText("Version 1")).toBeVisible();
+  await expect(lock.getByText("Not locked yet.")).toBeVisible();
+  await expect(lock.getByRole("button", { name: "Verify on-chain" })).toHaveCount(0);
+});
+
+test("lock check endpoint reports an unlocked market honestly", async ({ page }) => {
+  await verifiedUser(page, "lockcheck");
+  const id = await approvedMarket(page);
+  const res = await page.request.get(`/api/markets/${id}/verify-lock`);
+  expect(res.status()).toBe(200);
+  const v = (await res.json()).data;
+  expect(v.state).toBe("unlocked");
+  expect(v.currentHash).toMatch(/^[0-9a-f]{64}$/);
 });
 
 test("resolution: recommendation cites only stored evidence and is labelled as advisory", async ({ page }) => {

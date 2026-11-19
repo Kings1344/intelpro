@@ -1,7 +1,9 @@
 /**
  * Real devnet trading through the UI: launch a PREDICT market, buy YES, sell YES.
- * Requires E2E_DEVNET=1, devnet RPC access, SOL airdrops and the mUSDC faucet.
- * Uses a throwaway keypair generated for this run.
+ * Requires E2E_DEVNET=1, devnet RPC access and the mUSDC faucet.
+ * Uses a throwaway keypair generated for this run. It is funded from DEVNET_TEST_KEY
+ * (a devnet-only secret key, base58 or JSON byte array) when set, otherwise by airdrop,
+ * which the public devnet RPC often refuses.
  */
 import { test, expect } from "@playwright/test";
 import { approvedMarket, connectTestWallet, installTestWallet, testKeypair, verifiedUser } from "./fixtures/helpers";
@@ -16,13 +18,24 @@ async function rpc(method: string, params: unknown[]) {
   return j.result;
 }
 
+/** Sends SOL from the funder wallet to the throwaway test wallet. */
+async function fundFrom(secret: string, to: string, lamports: number): Promise<string> {
+  const { Connection, Keypair, PublicKey, SystemProgram, Transaction } = await import("@solana/web3.js");
+  const { base58Decode } = await import("../src/lib/solana/base58");
+  const bytes = secret.trim().startsWith("[") ? Uint8Array.from(JSON.parse(secret)) : base58Decode(secret.trim());
+  const funder = Keypair.fromSecretKey(bytes);
+  const conn = new Connection(RPC, "confirmed");
+  const tx = new Transaction().add(SystemProgram.transfer({ fromPubkey: funder.publicKey, toPubkey: new PublicKey(to), lamports }));
+  return conn.sendTransaction(tx, [funder]);
+}
+
 test.describe("devnet trading", () => {
   test.skip(process.env.E2E_DEVNET !== "1", "Set E2E_DEVNET=1 to run real devnet trading tests");
   test.setTimeout(300_000);
 
   test("launch a PREDICT market, buy YES, then sell YES — all confirmed on devnet", async ({ page }) => {
     const kp = testKeypair();
-    const sig = await rpc("requestAirdrop", [kp.address, 1_000_000_000]);
+    const sig = process.env.DEVNET_TEST_KEY ? await fundFrom(process.env.DEVNET_TEST_KEY, kp.address, 300_000_000) : await rpc("requestAirdrop", [kp.address, 1_000_000_000]);
     await expect.poll(async () => (await rpc("getSignatureStatuses", [[sig]])).value[0]?.confirmationStatus ?? null, { timeout: 60_000 }).toMatch(/confirmed|finalized/);
     const faucet = await fetch(FAUCET, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ wallet: kp.address }) });
     expect(faucet.ok, `mUSDC faucet responded ${faucet.status}`).toBeTruthy();
@@ -36,6 +49,13 @@ test.describe("devnet trading", () => {
 
     const id = await approvedMarket(page, `Will the E2E run ${Date.now()} finish before December 31, 2027?`);
     await page.goto(`/markets/${id}`);
+    await expect(page.getByRole("button", { name: "Launch on PREDICT" })).toBeDisabled();
+    await page.getByRole("button", { name: "Lock rules on Solana" }).click();
+    await expect(page.getByText(/Locked\. The approved rules/)).toBeVisible({ timeout: 120_000 });
+    const lock = page.getByRole("region", { name: "Rules lock" });
+    await lock.getByRole("button", { name: "Verify on-chain" }).click();
+    await expect(lock.getByText("Verified on-chain")).toBeVisible({ timeout: 60_000 });
+
     await page.getByLabel("Liquidity (mUSDC)").fill("50");
     await page.getByRole("button", { name: "Launch on PREDICT" }).click();
     await expect(page.getByText("Launched on PREDICT and linked")).toBeVisible({ timeout: 120_000 });

@@ -38,4 +38,5 @@ export const limiters = {
   fetch: new RateLimiter(30, 60 * 60_000), // outbound evidence retrievals
   email: new RateLimiter(5, 60 * 60_000), // verification / reset emails per user or IP
   upload: new RateLimiter(20, 60 * 60_000), // PDF uploads
+  verify: new RateLimiter(30, 10 * 60_000), // public lock checks (each one is an RPC call)
 };

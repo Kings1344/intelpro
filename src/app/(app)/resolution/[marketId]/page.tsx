@@ -11,6 +11,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { ConfidenceBar } from "@/components/domain/score-dial";
 import { DemoBadge, EngineBadge, EvidenceStatusBadge, RecommendationBadge, StanceBadge } from "@/components/domain/badges";
 import { ActionButton } from "@/components/domain/action-button";
+import { LockCard } from "@/components/domain/lock-card";
 import { formatDateTime, relativeTime } from "@/lib/utils";
 
 export const metadata = { title: "Resolve" };
@@ -52,8 +53,33 @@ export default async function ResolutionPage({ params }: { params: Promise<{ mar
       </Notice>
       {!criteria && <Notice tone="amber" className="mb-5">This market has no approved rules, so no recommendation can be generated. <Link className="underline" href={`/markets/${m.id}`}>Review the rules</Link>.</Notice>}
 
+      <LockCard
+        marketId={m.id}
+        approvedVersion={criteria?.version ?? null}
+        criteriaHash={m.criteriaHash}
+        anchorSignature={m.anchorSignature}
+        predictMarketPda={m.predictMarketPda}
+        isDemo={m.isDemo}
+      />
+
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-6">
+          {criteria && (
+            <Card>
+              <CardHeader title={`Locked rules, v${criteria.version}`} description="The outcome must follow these conditions. Evidence below is weighed against them, nothing else." />
+              <CardBody className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-[var(--radius-control)] border border-emerald/25 bg-emerald-wash/40 p-3.5">
+                  <p className="text-[12.5px] font-medium text-emerald-soft">YES if</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-fg">{criteria.yesCondition}</p>
+                </div>
+                <div className="rounded-[var(--radius-control)] border border-rust/25 bg-rust-wash/40 p-3.5">
+                  <p className="text-[12.5px] font-medium text-rust">NO if</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-fg">{criteria.noCondition}</p>
+                </div>
+                <p className="text-[12.5px] text-faint md:col-span-2">Source: {criteria.dataSource || "not defined"}. Deadline: {formatDateTime(criteria.resolutionDeadline)}.</p>
+              </CardBody>
+            </Card>
+          )}
           {rec ? (
             <Card>
               <CardHeader

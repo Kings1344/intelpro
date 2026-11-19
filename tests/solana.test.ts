@@ -80,3 +80,23 @@ test("PREDICT transactions must invoke the pm-AMM program", () => {
   assert.equal(analyseTransaction(fixture({ program: pm }), { slot: 1, err: null, confirmationStatus: "confirmed" }, { signer: SIGNER, programId: pm }).status, "CONFIRMED");
   assert.equal(analyseTransaction(fixture({ program: "11111111111111111111111111111111" }), { slot: 1, err: null, confirmationStatus: "confirmed" }, { signer: SIGNER, programId: pm }).status, "FAILED");
 });
+
+import { lockVerdict } from "../src/lib/solana/lock-verdict";
+import { anchorMemo as memoFor } from "../src/lib/solana/anchor-memo";
+
+test("lock verdict: verified only when the chain memo matches the rules shown now", () => {
+  const h = "a".repeat(64);
+  const chain = (memos: string[], status: "CONFIRMED" | "FAILED" | "NOT_FOUND" = "CONFIRMED") => ({ status, memos, slot: 42, blockTime: new Date("2026-11-19T00:00:00Z") });
+  const base = { marketId: "mkt1", currentHash: h, currentVersion: 2, signature: "sig" };
+  assert.equal(lockVerdict({ ...base, signature: null, chain: null }).state, "unlocked");
+  assert.equal(lockVerdict({ ...base, chain: chain([], "NOT_FOUND") }).state, "pending");
+  assert.equal(lockVerdict({ ...base, chain: chain([memoFor("mkt1", 2, h)], "FAILED") }).state, "failed");
+  assert.equal(lockVerdict({ ...base, chain: chain(["hello"]) }).state, "failed", "no Lockline memo");
+  assert.equal(lockVerdict({ ...base, chain: chain([memoFor("other", 2, h)]) }).state, "failed", "memo for another market");
+  const ok = lockVerdict({ ...base, chain: chain([`[100] ${memoFor("mkt1", 2, h)}`]) });
+  assert.equal(ok.state, "verified");
+  assert.equal(ok.onChainHash, h);
+  assert.equal(ok.slot, 42);
+  assert.equal(lockVerdict({ ...base, chain: chain([memoFor("mkt1", 1, h)]) }).state, "changed", "a newer version was approved after the lock");
+  assert.equal(lockVerdict({ ...base, chain: chain([memoFor("mkt1", 2, "b".repeat(64))]) }).state, "mismatch");
+});

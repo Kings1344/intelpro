@@ -70,6 +70,8 @@ jobs:
         run: npm run test:e2e
         env:
           E2E_DEVNET: ${{ inputs.devnet && '1' || '0' }}
+          # Devnet-only key that funds the throwaway test wallet (Settings → Secrets → Actions).
+          DEVNET_TEST_KEY: ${{ secrets.DEVNET_TEST_KEY }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
